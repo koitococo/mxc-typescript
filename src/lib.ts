@@ -1,4 +1,4 @@
-import { type z, type ZodSchema } from "zod";
+import type { z, ZodSchema } from "zod";
 
 export class UnreachableError extends Error {
   constructor() {

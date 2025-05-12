@@ -9,7 +9,7 @@ export const GetResponseSchema = z.object({
 });
 export type GetResponse = z.infer<typeof GetResponseSchema>;
 
-export function get(client: ApiClient) {
+export function GET(client: ApiClient) {
   return client.useApi(
     API_PATH,
     {
