@@ -1,5 +1,10 @@
 {
-  "name": "mxc-typescript",
+  "name": "@koitococo/mxc",
+  "version": "0.1.0",
+  "author": {
+    "email": "koitococo@outlook.com",
+    "name": "Koito Coco"
+  },
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
@@ -10,5 +15,10 @@
   },
   "dependencies": {
     "zod": "^3.24.4"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc"
   }
 }
