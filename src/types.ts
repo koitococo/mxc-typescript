@@ -86,10 +86,8 @@ export const ExtraInfoSchema = z.object({
 });
 export type ExtraInfo = z.infer<typeof ExtraInfoSchema>;
 
-export const NoneResponseSchema = z.null();
-export type NoneResponse = z.infer<typeof NoneResponseSchema>;
-
 export const CommandExecutionResponseSchema = z.object({
+  type: z.literal("CommandExecutionResponse"),
   code: z.number(),
   stdout: z.string(),
   stderr: z.string(),
@@ -98,26 +96,63 @@ export type CommandExecutionResponse = z.infer<
   typeof CommandExecutionResponseSchema
 >;
 
-export const FileOperationResponseSchema = z.object({
-  success: z.boolean(),
+export const FileDownloadResultSchema = z.object({
+  operation: z.literal("Download"),
+  ok: z.boolean(),
   hash: z.string().optional(),
 });
+export type FileDownloadResult = z.infer<typeof FileDownloadResultSchema>;
+
+export const FileUploadResultSchema = z.object({
+  operation: z.literal("Upload"),
+  ok: z.boolean(),
+  hash: z.string().optional(),
+});
+export type FileUploadResult = z.infer<typeof FileUploadResultSchema>;
+
+export const FileReadResultSchema = z.object({
+  operation: z.literal("Read"),
+  ok: z.boolean(),
+  size: z.number(),
+  content: z.string().optional(),
+});
+export type FileReadResult = z.infer<typeof FileReadResultSchema>;
+
+export const FileWriteResultSchema = z.object({
+  operation: z.literal("Write"),
+  ok: z.boolean(),
+});
+export type FileWriteResult = z.infer<typeof FileWriteResultSchema>;
+
+export const FileOperationResponseSchema = z
+  .object({
+    type: z.literal("FileOperationResponse"),
+  })
+  .and(
+    z.union([
+      FileDownloadResultSchema,
+      FileUploadResultSchema,
+      FileReadResultSchema,
+      FileWriteResultSchema,
+    ]),
+  );
 export type FileOperationResponse = z.infer<typeof FileOperationResponseSchema>;
 
 export const ScriptEvalResponseSchema = z.object({
+  type: z.literal("ScriptEvalResponse"),
   ok: z.boolean(),
   result: z.string(),
 });
 export type ScriptEvalResponse = z.infer<typeof ScriptEvalResponseSchema>;
 
 export const ErrorResponseSchema = z.object({
+  type: z.literal("ErrorResponse"),
   code: z.string(),
   message: z.string(),
 });
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
 export const AgentResponsePayloadSchema = z.union([
-  NoneResponseSchema,
   CommandExecutionResponseSchema,
   FileOperationResponseSchema,
   ScriptEvalResponseSchema,
