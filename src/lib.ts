@@ -25,20 +25,15 @@ export type GeneralError = {
   message: string;
 };
 
-export type HttpError = {
-  type: "http";
-  status: number;
-};
-
 export type ValidationError = {
   type: "validation";
   message: string;
 };
 
-export type ApiError = GeneralError | HttpError | ValidationError;
+export type ApiError = GeneralError | ValidationError;
 
 export type ApiResult<T, E extends BaseError = ApiError> = Promise<
-  Result<T, E>
+  Result<T, E> & { status: number }
 >;
 
 export type ApiResultInfer<
@@ -111,15 +106,7 @@ export async function useApi<
   }
   try {
     const response = await fetch(url, options);
-    if (!response.ok) {
-      return {
-        success: false,
-        error: {
-          type: "http",
-          status: response.status,
-        },
-      };
-    }
+    // We should not check for HTTP status codes here, because the "error" status does not mean that the request failed.
     if (responseSchema) {
       const data = await response.json();
       const schema = responseSchema as unknown as TResponseSchema;
@@ -127,11 +114,13 @@ export async function useApi<
       if (parsed.success) {
         return {
           success: true,
+          status: response.status,
           data: parsed.data,
         };
       }
       return {
         success: false,
+        status: response.status,
         error: {
           type: "validation",
           message: parsed.error.message,
@@ -140,11 +129,13 @@ export async function useApi<
     }
     return {
       success: true,
+      status: response.status,
       data: undefined,
     };
   } catch (error) {
     return {
       success: false,
+      status: -1, // Network error
       error: { type: "general", message: (error as Error).message },
     };
   }
