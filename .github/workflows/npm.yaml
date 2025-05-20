@@ -1,0 +1,19 @@
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          registry-url: https://registry.npmjs.org/
+      - run: bun install
+      - run: bun run build
+      - run: bun publish
+        env:
+          NPM_CONFIG_TOKEN: ${{secrets.npm_token}}

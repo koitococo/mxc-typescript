@@ -1,6 +1,6 @@
 {
   "name": "@koitococo/mxc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "email": "koitococo@outlook.com",
     "name": "Koito Coco"
@@ -19,6 +19,6 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "npx tsc"
+    "build": "bunx tsc"
   }
 }
